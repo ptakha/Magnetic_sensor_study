@@ -1,0 +1,14 @@
+Variables in file: sensing_current*.dat
+Dimension of particle set is 3
+ 1: time
+ 2: visited time
+ 3: particle id
+ 4: Coordinate_1
+ 5: Coordinate_2
+ 6: Coordinate_3
+ 7: current density re e_1
+ 8: current density re e_2
+ 9: current density re e_3
+10: current density im e_1
+11: current density im e_2
+12: current density im e_3

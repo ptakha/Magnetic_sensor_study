@@ -28,10 +28,12 @@ Simulation
 	Max Output Level = 5
 	Coordinate System = "Cartesian 3D"
 	Coordinate Mapping(3) = 1 2 3
-	Simulation Type = Steady state
+	Simulation Type = Transient
 	Angular Frequency = $ang_freq_t   ! angular frequency
 	Steady State Max Iterations = 100
-	Output Intervals = 1
+	Output Intervals = 10
+        Timestep Intervals = 2e4
+        Timestep Sizes = 1e-4
 	Timestepping Method = BDF
 	BDF Order = 1
 	Solver Input File = case.sif
@@ -178,11 +180,35 @@ Solver 3
         Vector Field 4 = String Current Density
 End
 
+Solver 4
+  	Exec Solver = After all
+  	Equation = SaveGrid
+	Procedure = "SaveGridData" "SaveGridData"
+  	Filename Prefix = String sensing_current
+        Output Format = String table
+	Check for Duplicates = Logical True
+
+	Grid nx = Integer 25
+	Grid ny = Integer 1
+	Grid nz = Integer 25
+	
+	Min Coordinate 1 = Real 0.012
+	Min Coordinate 2 = Real -0.001
+	Min Coordinate 3 = Real -0.005
+
+	Max Coordinate 1 = Real 0.014
+	Max Coordinate 2 = Real 0.001
+	Max Coordinate 3 = Real 0.005
+
+        Vector Field 1 = String Current Density Re E
+        Vector Field 2 = String Current Density Im E
+End
+
 ! -------- EQUATIONS ----------
 
 Equation 1
 	Name = "Magnetic field"
-	Active Solvers (3) =  1 2 3
+	Active Solvers (4) =  1 2 3 4
 End
 
 !---------BODY FORCE------
@@ -194,10 +220,10 @@ Body Force 1
 	! tx(1) - y
 	! tx(2) - z
 	! tx(3) - t
-	Current Density 1 = Variable coordinate
-		Real MATC "x=tx(0); y=tx(1); r=sqrt(x*x+y*y); -1*I_dens*y/r"
-	Current Density 2 = Variable coordinate
-		Real MATC "x=tx(0); y=tx(1); r=sqrt(x*x+y*y); I_dens*x/r"
+	Current Density 1 = Variable coordinate, time
+		Real MATC "x=tx(0); y=tx(1); t=tx(3); r=sqrt(x*x+y*y); -1*I_dens*y/r*sin(2*3.1415926*ang_freq_t*t)"
+	Current Density 2 = Variable coordinate, time
+		Real MATC "x=tx(0); y=tx(1); t=tx(3); r=sqrt(x*x+y*y); I_dens*x/r*sin(2*3.1415926*ang_freq_t*t)"
 End
 
 
