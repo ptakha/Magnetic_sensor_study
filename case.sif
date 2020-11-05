@@ -32,7 +32,7 @@ Simulation
 	Angular Frequency = $ang_freq_t   ! angular frequency
 	Steady State Max Iterations = 100
 	Output Intervals = 10
-        Timestep Intervals = 2e4
+        Timestep Intervals = 20000
         Timestep Sizes = 1e-4
 	Timestepping Method = BDF
 	BDF Order = 1
