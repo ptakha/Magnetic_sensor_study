@@ -29,10 +29,9 @@ Simulation
 	Coordinate System = "Cartesian 3D"
 	Coordinate Mapping(3) = 1 2 3
 	Simulation Type = Transient
-	Angular Frequency = $ang_freq_t   ! angular frequency
 	Steady State Max Iterations = 100
 	Output Intervals = 10
-        Timestep Intervals = 20000
+        Timestep Intervals = 3 !20000
         Timestep Sizes = 1e-4
 	Timestepping Method = BDF
 	BDF Order = 1
@@ -112,18 +111,19 @@ End
 Solver 1
 	  Equation = "MGDynamics"
 
-	  Variable = "AV[AV re:1 AV im:1]"
-	  Procedure = "MagnetoDynamics" "WhitneyAVHarmonicSolver"
-
+	  Variable = "AV"
+	  Procedure = "MagnetoDynamics" "WhitneyAVSolver"
 	  Linear System Symmetric = True
+
+
 	  Linear System Solver = "Iterative"
-	  Linear System Preconditioning = none
-	  Linear System Residual Output = 50
-	  Linear System Max Iterations = 10000
-	  Linear System Iterative Method = BiCGStabl
-	  !GCR
-	  Linear System Convergence Tolerance = 3.0e-7
-	  BicgStabl Polynomial Degree = 4
+	  Linear System Preconditioning = None
+	  Linear System Residual Output = 10
+	  Linear System Max Iterations = 5000
+	  Linear System Iterative Method = BiCGstabl
+	  Linear System Convergence Tolerance = 1.0e-6
+	  Steady State Convergence Tolerance = 1e-09
+
 End
 
 
@@ -149,12 +149,6 @@ Solver 2
 	  Linear System Iterative Method = CG
 	  Linear System Convergence Tolerance = 1.0e-8
 
-	!  Calculate Nodal Fields = Logical False
-	!  Impose Body Force Potential = Logical True
-	!  Impose Body Force Current = Logical True
-
-	!  Discontinuous Bodies = True
-	!  calculate harmonic peak power = logical true
 
 	  Calculate Magnetic Vector Potential = Logical True
 	  Calculate Current Density = Logical True
@@ -181,11 +175,12 @@ Solver 3
 End
 
 Solver 4
-  	Exec Solver = After all
+  	Exec Solver = After Timestep
   	Equation = SaveGrid
 	Procedure = "SaveGridData" "SaveGridData"
-  	Filename Prefix = String sensing_current
+  	Filename Prefix = String "sensing_current"
         Output Format = String table
+	Output Directory = File "results/"
 	Check for Duplicates = Logical True
 
 	Grid nx = Integer 25
@@ -200,8 +195,7 @@ Solver 4
 	Max Coordinate 2 = Real 0.001
 	Max Coordinate 3 = Real 0.005
 
-        Vector Field 1 = String Current Density Re E
-        Vector Field 2 = String Current Density Im E
+        Vector Field 1 = String Current Density
 End
 
 ! -------- EQUATIONS ----------
@@ -233,10 +227,5 @@ End
 Boundary Condition 1
 	  name = "Far"
 	  target boundaries(1) = 12
-	  AV re {e} 1 = 0
-	  AV re {e} 2 = 0
-	  AV re {e} 3 = 0
-	  AV im {e} 1 = 0
-	  AV im {e} 2 = 0
-	  AV im {e} 3 = 0
+	  AV  = Real 0
 End
