@@ -28,13 +28,13 @@ Simulation
 	Max Output Level = 5
 	Coordinate System = "Cartesian 3D"
 	Coordinate Mapping(3) = 1 2 3
-	Simulation Type = Transient
+	Simulation Type = "Steady state"
 	Steady State Max Iterations = 100
 	Output Intervals = 10
-        Timestep Intervals = 3 !20000
-        Timestep Sizes = 1e-4
-	Timestepping Method = BDF
-	BDF Order = 1
+        !Timestep Intervals = 3 !20000
+        !Timestep Sizes = 1e-4
+	!Timestepping Method = BDF
+	!BDF Order = 1
 	Solver Input File = case.sif
 End
 
@@ -115,12 +115,12 @@ Solver 1
 	  Procedure = "MagnetoDynamics" "WhitneyAVSolver"
 	  Linear System Symmetric = True
 
-
 	  Linear System Solver = "Iterative"
 	  Linear System Preconditioning = None
 	  Linear System Residual Output = 10
 	  Linear System Max Iterations = 5000
-	  Linear System Iterative Method = BiCGstabl
+	  Linear System Iterative Method = GMRES
+          !Linear System GMRES restart = 10000000
 	  Linear System Convergence Tolerance = 1.0e-6
 	  Steady State Convergence Tolerance = 1e-09
 
